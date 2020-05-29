@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.ISaleDetailDAO">
+	<select id="getLastLsh" resultType="String">
+		select max(right(lsh,4)) as
+		lastNo
+		from saledetail
+		where left(lsh,8)=#{day}
+	</select>
+
+	<insert id="insert" parameterType="vo.SaleDetail">
+		insert into saledetail
+		(lsh,barcode,productName,price,count,operator,saleTime)
+		values
+		(#{lsh},#{barcode},#{productName},#{price},#{count},#{operator},#{saleTime})
+	</insert>
+
+	<select id="query" parameterType="vo.SaleDetail"
+		resultType="vo.SaleDetail">
+		select lsh,barcode,productName,price,count,operator,saleTime
+		from saledetail
+		<where>
+			<if test="lsh!=null and ''!=lsh">
+				and lsh = #{lsh}
+			</if>
+			<if test="barcode!=null and ''!=barcode">
+				and barcode = #{barcode}
+			</if>
+			<if test="productName!=null and ''!=productName">
+				and productName like '%${productName}%'
+			</if>
+			<if test="operator!=null and ''!=operator">
+				and operator = #{operator}
+			</if>
+			<if test="saleTime!=null and ''!=saleTime">
+				and left(saleTime,10) = #{saleTime}
+			</if>
+		</where>
+
+
+
+	</select>
+</mapper>
